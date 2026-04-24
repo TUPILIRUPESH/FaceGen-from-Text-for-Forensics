@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered forensic facial composite generation from natural language descriptions">
+    <title>ForensicAI — Suspect Face Composite Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-brain"></i></div>
+                <div class="logo-text">
+                    <h1>ForensicAI</h1>
+                    <span class="logo-subtitle">Suspect Composite Generator</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="status-badge" id="statusBadge">
+                <span class="status-dot"></span>
+                <span class="status-text">System Ready</span>
+            </div>
+            <div class="device-info">
+                <i class="fas fa-microchip"></i>
+                <span id="deviceInfo">Detecting...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="app-main">
+        <!-- Left Panel — Input Controls -->
+        <section class="panel panel-input" id="inputPanel">
+            <div class="panel-header">
+                <h2><i class="fas fa-sliders-h"></i> Suspect Description</h2>
+                <span class="badge">Input</span>
+            </div>
+
+            <form id="descriptionForm">
+                <div class="form-grid">
+                    <!-- Gender -->
+                    <div class="form-group">
+                        <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Non-Binary">Non-Binary</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Age Group -->
+                    <div class="form-group">
+                        <label for="ageGroup"><i class="fas fa-calendar-alt"></i> Age Group</label>
+                        <select id="ageGroup" name="age_group">
+                            <option value="">Select Age</option>
+                            <option value="18-25">18–25</option>
+                            <option value="25-30">25–30</option>
+                            <option value="30-40">30–40</option>
+                            <option value="40-50">40–50</option>
+                            <option value="50-60">50–60</option>
+                            <option value="60+">60+</option>
+                        </select>
+                    </div>
+
+                    <!-- Skin Tone -->
+                    <div class="form-group">
+                        <label for="skinTone"><i class="fas fa-palette"></i> Skin Tone</label>
+                        <select id="skinTone" name="skin_tone">
+                            <option value="">Select Skin Tone</option>
+                            <option value="Very Fair">Very Fair</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Light Brown">Light Brown</option>
+                            <option value="Medium Brown">Medium Brown</option>
+                            <option value="Dark Brown">Dark Brown</option>
+                            <option value="Very Dark">Very Dark</option>
+                        </select>
+                    </div>
+
+                    <!-- Face Shape -->
+                    <div class="form-group">
+                        <label for="faceShape"><i class="fas fa-user-circle"></i> Face Shape</label>
+                        <select id="faceShape" name="face_shape">
+                            <option value="">Select Face Shape</option>
+                            <option value="Oval">Oval</option>
+                            <option value="Round">Round</option>
+                            <option value="Square">Square</option>
+                            <option value="Heart">Heart</option>
+                            <option value="Oblong">Oblong</option>
+                            <option value="Diamond">Diamond</option>
+                        </select>
+                    </div>
+
+                    <!-- Eye Color -->
+                    <div class="form-group">
+                        <label for="eyeColor"><i class="fas fa-eye"></i> Eye Color</label>
+                        <select id="eyeColor" name="eye_color">
+                            <option value="">Select Eye Color</option>
+                            <option value="Brown">Brown</option>
+                            <option value="Blue">Blue</option>
+                            <option value="Green">Green</option>
+                            <option value="Hazel">Hazel</option>
+                            <option value="Gray">Gray</option>
+                            <option value="Black">Black</option>
+                            <option value="Amber">Amber</option>
+                        </select>
+                    </div>
+
+                    <!-- Hair Style -->
+                    <div class="form-group">
+                        <label for="hairStyle"><i class="fas fa-cut"></i> Hair Style</label>
+                        <select id="hairStyle" name="hair_style">
+                            <option value="">Select Hair Style</option>
+                            <option value="Short Black">Short Black</option>
+                            <option value="Short Brown">Short Brown</option>
+                            <option value="Short Blonde">Short Blonde</option>
+                            <option value="Long Black">Long Black</option>
+                            <option value="Long Brown">Long Brown</option>
+                            <option value="Long Blonde">Long Blonde</option>
+                            <option value="Curly Black">Curly Black</option>
+                            <option value="Curly Brown">Curly Brown</option>
+                            <option value="Bald">Bald</option>
+                            <option value="Buzz Cut">Buzz Cut</option>
+                            <option value="Gray/White">Gray/White</option>
+                        </select>
+                    </div>
+
+                    <!-- Facial Hair -->
+                    <div class="form-group">
+                        <label for="facialHair"><i class="fas fa-user"></i> Facial Hair</label>
+                        <select id="facialHair" name="facial_hair">
+                            <option value="">Select Facial Hair</option>
+                            <option value="None">None / Clean Shaven</option>
+                            <option value="Stubble">Stubble</option>
+                            <option value="Mustache">Mustache</option>
+                            <option value="Beard">Full Beard</option>
+                            <option value="Goatee">Goatee</option>
+                            <option value="Sideburns">Sideburns</option>
+                        </select>
+                    </div>
+
+                    <!-- Accessories -->
+                    <div class="form-group">
+                        <label for="accessories"><i class="fas fa-glasses"></i> Accessories</label>
+                        <select id="accessories" name="accessories">
+                            <option value="">Select Accessories</option>
+                            <option value="None">None</option>
+                            <option value="Glasses">Glasses</option>
+                            <option value="Sunglasses">Sunglasses</option>
+                            <option value="Hat">Hat</option>
+                            <option value="Cap">Cap</option>
+                            <option value="Earrings">Earrings</option>
+                            <option value="Scarf">Scarf</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Additional Description -->
+                <div class="form-group full-width">
+                    <label for="additionalDesc"><i class="fas fa-align-left"></i> Additional Description</label>
+                    <textarea id="additionalDesc" name="description" rows="3"
+                              placeholder="e.g., Tall person with sharp jaw, prominent cheekbones, scar on left cheek..."></textarea>
+                    <div class="char-count"><span id="charCount">0</span>/1000</div>
+                </div>
+
+                <!-- Generate Button -->
+                <button type="submit" class="btn-generate" id="generateBtn">
+                    <span class="btn-content">
+                        <i class="fas fa-magic"></i>
+                        <span>Generate Suspect Face</span>
+                    </span>
+                    <span class="btn-loading" style="display:none;">
+                        <div class="spinner"></div>
+                        <span>Generating...</span>
+                    </span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Center Panel — Generated Faces -->
+        <section class="panel panel-output" id="outputPanel">
+            <div class="panel-header">
+                <h2><i class="fas fa-portrait"></i> Generated Composites</h2>
+                <span class="badge badge-ai">AI Output</span>
+            </div>
+
+            <!-- Placeholder State -->
+            <div class="output-placeholder" id="outputPlaceholder">
+                <div class="placeholder-graphic">
+                    <i class="fas fa-user-secret"></i>
+                    <div class="scan-line"></div>
+                </div>
+                <p>Enter suspect description and click <strong>Generate</strong></p>
+                <p class="subtitle">AI-powered composite will appear here</p>
+            </div>
+
+            <!-- Results -->
+            <div class="output-results" id="outputResults" style="display:none;">
+                <!-- Description Used -->
+                <div class="description-card" id="descriptionCard">
+                    <div class="desc-label"><i class="fas fa-comment-dots"></i> Description Processed</div>
+                    <p id="processedDescription"></p>
+                </div>
+
+                <!-- Variation Grid -->
+                <div class="variation-grid" id="variationGrid">
+                    <!-- Variations populated by JS -->
+                </div>
+
+                <!-- Generation Info -->
+                <div class="gen-info">
+                    <span><i class="fas fa-clock"></i> <span id="genTime">—</span></span>
+                    <span><i class="fas fa-layer-group"></i> <span id="genCount">—</span> variations</span>
+                </div>
+
+                <!-- Regenerate -->
+                <button class="btn-regenerate" id="regenerateBtn">
+                    <i class="fas fa-redo-alt"></i> Regenerate Variations
+                </button>
+            </div>
+        </section>
+
+        <!-- Right Panel — History -->
+        <section class="panel panel-history" id="historyPanel">
+            <div class="panel-header">
+                <h2><i class="fas fa-history"></i> History</h2>
+                <button class="btn-clear-history" id="clearHistoryBtn" title="Clear history">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+
+            <div class="history-empty" id="historyEmpty">
+                <i class="fas fa-clock"></i>
+                <p>No generations yet</p>
+            </div>
+
+            <div class="history-list" id="historyList">
+                <!-- History items populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Print Template (hidden) -->
+    <div id="printArea" style="display:none;"></div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
